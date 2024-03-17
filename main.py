@@ -2,6 +2,7 @@ import flet as ft
 from screens.Landing import Landing
 from screens.Product import Product
 from screens.Cart import Cart
+from screens.Login import Login
 
 
 def main(page: ft.Page) -> None:
@@ -19,11 +20,13 @@ def main(page: ft.Page) -> None:
         if page.route == "/cart":
             page.views.append(Cart(page))
 
+        if page.route == "/login":
+            page.views.append(Login(page))
 
         page.update()
 
     page.on_route_change = router
-    page.go("/")
+    page.go("/login")
 
 
 ft.app(target=main, assets_dir="assets", upload_dir="screens")
