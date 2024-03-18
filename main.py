@@ -3,6 +3,8 @@ from screens.Landing import Landing
 from screens.Product import Product
 from screens.Cart import Cart
 from screens.Login import Login
+from screens.Products import edit_product, home_product, new_product, view_product
+
 
 
 
@@ -16,17 +18,42 @@ def main(page: ft.Page) -> None:
     def router(route):
         page.views.clear()
 
-        if page.route == "/":
-            page.views.append(Landing(page))
 
-        if page.route == "/products":
-            page.views.append(Product(page))
-
-        if page.route == "/cart":
-            page.views.append(Cart(page))
-
+        # ROTA DE LOGIN
         if page.route == "/login":
             page.views.append(Login(page))
+
+        # LANDING PAGE
+        elif page.route == "/":
+            page.views.append(Landing(page))
+
+        # ROTA DE PRODUTOS
+        elif page.route == "/products":
+            page.views.append(home_product.Home(page))
+
+        elif page.route == "/product/add":
+            page.views.append(new_product.New(page))
+
+        elif page.route == "/product/edit":
+            page.views.append(edit_product.Edit(page))
+
+        elif page.route == "/product/view":
+            page.views.append(view_product.View(page))
+
+
+        # ROTA DE PEDIDOS
+        elif page.route == "/stock":
+            page.views.append(Cart(page))
+
+        elif page.route == "/stock/add":
+            page.views.append(Cart(page))
+
+        elif page.route == "/stock/edit":
+            page.views.append(Cart(page))
+
+        elif page.route == "/stock/view":
+            page.views.append(Cart(page))
+
 
         page.update()
 
@@ -34,4 +61,4 @@ def main(page: ft.Page) -> None:
     page.go("/")
 
 
-ft.app(target=main, assets_dir="assets", upload_dir="screens")
+ft.app(target=main, assets_dir="assets")
