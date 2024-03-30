@@ -48,6 +48,35 @@ dados = [
 ]
 
 
+users = [
+	{
+		"cod": "8054",
+		"nome": "Zelenia Galloway",
+		"email": "risus.quis.diam@outlook.couk"
+	},
+	{
+		"cod": "2482",
+		"nome": "Scarlett Ortiz",
+		"email": "luctus.ut@hotmail.edu"
+	},
+	{
+		"cod": "1431",
+		"nome": "Imogene Phelps",
+		"email": "in@aol.couk"
+	},
+	{
+		"cod": "9306",
+		"nome": "Thomas Lara",
+		"email": "dis@yahoo.couk"
+	},
+	{
+		"cod": "5389",
+		"nome": "Justina Francis",
+		"email": "mollis.phasellus@hotmail.edu"
+	}
+]
+
+
 # LANDING PAGE
 
 @app.page("/")
@@ -81,7 +110,7 @@ def Landing(data: fs.Datasy):
                     shape={"": ft.RoundedRectangleBorder(radius=10)},
                     side={"": ft.BorderSide(2, "white54")}
                 ),
-                on_click=lambda x: page.go("/teste")
+                on_click=lambda x: page.go("/products")
             ),
 
             ft.IconButton(
@@ -93,7 +122,7 @@ def Landing(data: fs.Datasy):
                     shape={"": ft.RoundedRectangleBorder(radius=10)},
                     side={"": ft.BorderSide(2, "white54")}
                 ),
-                on_click=lambda x: page.go("/products")
+                on_click=lambda x: page.go("/cashier")
             ),
         ], alignment="center"
     ),)
@@ -113,107 +142,6 @@ def Landing(data: fs.Datasy):
 
 
 @app.page("/products")
-def Product(data: fs.Datasy):
-    page = data.page
-
-    def display_product_page_header(self):
-        return ft.Container(
-            content=ft.Row(
-                [
-                    ft.Icon("settings", size=18),
-                    ft.IconButton(
-                        "shopping_cart_outlined",
-                        on_click=lambda e: page.go("/cart"),
-                        icon_size=18
-                    )
-
-                ], alignment="spaceBetween"
-            )
-
-        )
-
-    def display_product_page_footer():
-        ...
-
-    def create_products(products: dict = Model.get_products()) -> None:
-        for _, values in products.items():
-            for key, value in values.items():
-
-                if key == "img_src":
-                    img_src: ft.Container = create_product_image(
-                        img_path=values["img_src"])
-
-                elif key == "name":
-                    name = values["name"]
-
-                elif key == "description":
-                    description = values["description"]
-
-                elif key == "id":
-                    idd = values['id']
-
-                elif key == "price":
-                    price = create_product_price(values["price"], idd)
-
-            texts = create_product_text(name, description)
-
-            create_full_item_view(img_src, texts, price)
-
-    def create_full_item_view(img_src, texts, price) -> None:
-        item = ft.Column()
-        item.controls.append(create_product_container(4, img_src))
-        item.controls.append(create_product_container(4, texts))
-        item.controls.append(create_product_container(4, price))
-
-        products.controls.append(
-            create_item_wrapper(item)
-        )
-
-    def create_item_wrapper(item: ft.Column):
-        return ft.Container(width=250, height=450, content=item, padding=8,
-                            border_radius=6)
-
-    def create_product_image(self, img_path: str) -> ft.Container:
-        return ft.Container(image_src=img_path, image_fit="fill",
-                            border_radius=6, padding=10)
-
-    def create_product_text(name: str, description: str) -> ft.Column:
-        return ft.Column([ft.Text(name, size=18), ft.Text(description, size=11)])
-
-    def create_product_price(price: str, idd: str):
-        return ft.Row(
-            [
-                ft.Text(price, size=14),
-                ft.IconButton("add", data=idd,
-                              on_click=add_to_cart
-                              )
-            ]
-        )
-
-    def create_product_container(self, expand: bool, control: ft.control) -> ft.Container:
-        return ft.Container(content=control, expand=expand, padding=5)
-
-    def add_to_cart(e: ft.TapEvent):
-        Model.add_item_to_cart(e.control.data)
-
-    products = ft.Row(expand=True, scroll="auto", spacing=30)
-    # create_products(products)
-    return ft.View(
-        controls=[
-            # display_product_page_header(),
-            ft.Text("Shop", size=32),
-            ft.Text("Select items form the list bellow"),
-            products,
-            ft.FilledButton("Go to Home", on_click=lambda x: page.go("/")),
-
-            # display_product_page_footer(),
-        ],
-        vertical_alignment="center",
-        horizontal_alignment="center"
-    )
-
-
-@app.page("/teste")
 def teste(data: fs.Datasy):
     page = data.page
     place = ft.DataTable(
@@ -266,8 +194,8 @@ def teste(data: fs.Datasy):
             ft.Container(content=place,),
             ft.Row(
                 controls=[
-                    ft.TextButton(icon=ft.icons.BACKPACK,  text=("Voltar"), on_click=lambda x: page.go("/")),
-                    ft.TextButton(icon=ft.icons.BACKPACK,  text=("Adicionar Produto"), on_click=lambda x: page.go("/teste/new"))
+                    ft.TextButton(icon=ft.icons.ARROW_BACK_OUTLINED,  text=("Voltar"), on_click=lambda x: page.go("/")),
+                    ft.TextButton(icon=ft.icons.BACKPACK,  text=("Adicionar Produto"), on_click=lambda x: page.go("/product/new"))
                 ],
                 alignment="spaceAround"
                 
@@ -277,15 +205,78 @@ def teste(data: fs.Datasy):
     )
 
 
-@app.page("/teste/new")
+@app.page("/product/new")
 def product_view(data: fs.Datasy):
     page = data.page
     return ft.View(
         controls=[
-            ft.Text("teste")
+            ft.Text("teste"),
+            ft.TextButton(icon=ft.icons.ARROW_BACK_OUTLINED, text="Voltar", on_click=lambda x: page.go("/teste"))
         ]
     )
 
+
+
+
+
+@app.page("/cashier")
+def cashier(data: fs.Datasy):
+    page = data.page
+    place = ft.DataTable(
+        columns=[
+            ft.DataColumn(ft.Text("Cod"), numeric=True),
+            ft.DataColumn(ft.Text("Nome")),
+            ft.DataColumn(ft.Text("email")),
+            # ft.DataColumn(ft.Text("Preço")),
+            # ft.DataColumn(ft.Text("Estoque")),
+        ],
+        rows=[],
+        heading_row_color="red",
+        border=ft.border.all(2, ft.colors.BLACK),
+        border_radius=ft.border_radius.all(20),
+
+    )
+    
+   
+
+    for index, i in enumerate(users):
+        cod = ft.Text(i["cod"])
+        nome = ft.Text(i["nome"])
+        email = ft.Text(i["email"])
+
+        row =  ft.DataRow(
+                cells=[
+                    ft.DataCell(cod),
+                    ft.DataCell(nome),
+                    ft.DataCell(email),
+                ],
+                on_select_changed=lambda e: print(f"{print(e.control.cells)}"),
+                color=({ft.MaterialState.HOVERED: ft.colors.BLUE_GREY_600}),
+                
+            )
+        
+
+        place.rows.append(
+           row
+        )
+
+    return ft.View(
+        horizontal_alignment="center",
+        vertical_alignment="spaceBetween",
+
+        controls=[
+            ft.Container(content=place,),
+            ft.Row(
+                controls=[
+                    ft.TextButton(icon=ft.icons.ARROW_BACK_OUTLINED,  text=("Voltar"), on_click=lambda x: page.go("/")),
+                    ft.TextButton(icon=ft.icons.ACCOUNT_CIRCLE_SHARP,  text=("Adicionar Caixar"), on_click=lambda x: page.go("/cashier/new"))
+                ],
+                alignment="spaceAround"
+                
+            )
+
+        ]
+    )
 
 
 app.run()
